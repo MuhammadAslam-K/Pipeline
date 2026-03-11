@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { updateLeadStatus } from "@/actions/lead.actions";
 import { ILead } from "@/models/Lead";
-import { Phone, BookOpen, User, CalendarDays, Edit } from "lucide-react";
+import { Phone, BookOpen, User, CalendarDays, Edit, MessageCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -54,16 +54,40 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
 
   return (
     <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-      <DialogTrigger
-        render={
-          <Card className="w-full shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border-l-4 border-l-primary/50 group" />
-        }
-      >
-        <CardContent className="p-3">
-          <h4 className="font-bold text-sm group-hover:text-primary transition-colors truncate">{lead.name}</h4>
-          <p className="text-xs text-muted-foreground truncate">{lead.course}</p>
-        </CardContent>
-      </DialogTrigger>
+      <div className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors border-b last:border-b-0 group relative">
+        <DialogTrigger
+          render={
+            <div className="flex-1 flex items-center justify-between cursor-pointer mr-12" />
+          }
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg leading-none">
+              {lead.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col text-left">
+              <h4 className="font-bold text-base text-gray-900 group-hover:text-primary transition-colors">{lead.name}</h4>
+              <p className="text-sm text-gray-500">{lead.phone}</p>
+            </div>
+          </div>
+          <div className="flex flex-col text-right">
+            <div className="flex items-center gap-2 justify-end">
+              <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
+                 <User className="w-4 h-4 text-slate-500" />
+              </div>
+              <span className="text-xs font-semibold text-gray-700">{lead.setter}</span>
+            </div>
+          </div>
+        </DialogTrigger>
+        <a
+          href={`https://wa.me/${String(lead.phone).replace(/\D/g, "")}`}
+          target="_blank"
+          rel="noreferrer"
+          className="absolute right-4 p-2 text-[#25D366] hover:bg-green-50 rounded-full transition-colors z-20 flex items-center justify-center h-10 w-10"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MessageCircle className="w-6 h-6 fill-current" />
+        </a>
+      </div>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <DialogTitle className="text-xl font-bold">{lead.name}</DialogTitle>

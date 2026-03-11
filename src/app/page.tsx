@@ -6,24 +6,24 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen p-6 md:p-12 bg-gray-50 dark:bg-zinc-950 font-sans">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-[1800px] mx-auto space-y-8">
         <header className="flex items-center justify-between pb-6 border-b">
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-gray-900 dark:text-gray-100">
               Pipeline Flow
             </h1>
-            <p className="text-muted-foreground mt-2 text-lg">
+            {/* <p className="text-muted-foreground mt-2 text-lg">
               High-performance lead management and tracking.
-            </p>
+            </p> */}
           </div>
           <div className="hidden sm:block">
             <div className="h-12 w-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/30 text-xl border-2 border-primary-foreground/20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /></svg>
             </div>
           </div>
         </header>
 
-        <section className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border p-6 min-h-[70vh]">
+        <section className="bg-white dark:bg-zinc-900 p-6 min-h-[70vh]">
           <LeadBoard initialLeads={leads} />
         </section>
       </div>

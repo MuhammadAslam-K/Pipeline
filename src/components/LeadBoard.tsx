@@ -7,7 +7,7 @@ import { LeadModal } from "./LeadModal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Users, ChevronLeft, ArrowRight } from "lucide-react";
+import { Plus, Search, Users, ChevronLeft, ArrowRight, UserPlus, MessageSquare, DollarSign, Clock, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const statuses = [
@@ -17,6 +17,14 @@ const statuses = [
   "Will Do (Needed Time)",
   "This Month Admission",
 ];
+
+const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
+  "Interested": { color: "bg-[#39B5A3]", icon: UserPlus, label: "Interested" },
+  "Discussing in Home": { color: "bg-[#4D96F1]", icon: MessageSquare, label: "Discussing in Home" },
+  "Discussion Completed": { color: "bg-[#A37EE1]", icon: DollarSign, label: "Discussion Completed" },
+  "Will Do (Needed Time)": { color: "bg-[#F8A651]", icon: Clock, label: "Will Do (Needed Time)" },
+  "This Month Admission": { color: "bg-[#F16C91]", icon: Star, label: "This Month Admissions" },
+};
 
 const setters = ["All", "Bashid", "Albirt", "Athira", "Farsana", "Shahna"];
 
@@ -50,9 +58,9 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
         <div className="flex items-center justify-between w-full lg:w-auto">
           <div className="flex items-center gap-2">
             {activeStage && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setActiveStage(null)}
                 className="mr-1"
               >
@@ -104,42 +112,51 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
       </div>
 
       {!activeStage ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {statuses.map((status) => (
-            <Card 
-              key={status} 
-              className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group relative overflow-hidden"
-              onClick={() => setActiveStage(status)}
-            >
-              <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors" />
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100 max-w-[70%]">{status}</h3>
-                  <span className="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm">
-                    {getStageCount(status)}
-                  </span>
-                </div>
-                <div className="flex items-center text-sm text-muted-foreground font-medium group-hover:text-primary transition-colors">
-                  View Leads <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          {statuses.map((status) => {
+            const config = statusConfig[status];
+            const StatusIcon = config.icon;
+            return (
+              <Card
+                key={status}
+                className={`${config.color} border-none shadow-lg hover:brightness-95 transition-all cursor-pointer rounded-3xl overflow-hidden aspect-[4/3] relative group`}
+                onClick={() => setActiveStage(status)}
+              >
+                <CardContent className="p-8 h-full flex flex-col justify-between text-white">
+                  <div className="flex justify-between items-start">
+                    <span className="text-4xl font-bold opacity-90">{getStageCount(status)}</span>
+                    <StatusIcon className="w-10 h-10 opacity-80" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-2xl font-bold leading-tight">{config.label.split(' ')[0]}</p>
+                    <p className="text-2xl font-bold leading-tight">{config.label.split(' ').slice(1).join(' ')}</p>
+                  </div>
+
+                  {/* Subtle hover indicator */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="bg-white/20 p-2 rounded-full">
+                      <ArrowRight className="w-5 h-5" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       ) : (
-        <div className="flex flex-col gap-3 max-w-2xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="flex flex-col w-full animate-in fade-in slide-in-from-bottom-2 duration-300 bg-white rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border overflow-hidden">
           {filteredLeads
             .filter((lead) => lead.status === activeStage)
             .map((lead) => (
               <LeadCard key={String(lead._id)} lead={lead} onEdit={handleEdit} />
             ))}
-          
+
           {filteredLeads.filter((l) => l.status === activeStage).length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-muted-foreground bg-muted/20 rounded-2xl border border-dashed">
               <Search className="w-12 h-12 mb-4 opacity-20" />
               <p className="text-lg font-medium">No leads found in this stage</p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="mt-4"
                 onClick={() => setActiveStage(null)}
               >
