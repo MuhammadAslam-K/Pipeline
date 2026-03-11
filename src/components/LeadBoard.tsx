@@ -110,24 +110,23 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
       </div>
 
       {!activeStage ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-6">
           {statuses.map((status) => {
             const config = statusConfig[status];
             const StatusIcon = config.icon;
             return (
               <Card
                 key={status}
-                className={`${config.color} border-none shadow-lg hover:brightness-95 transition-all cursor-pointer rounded-3xl overflow-hidden aspect-[4/3] relative group`}
+                className={`${config.color} border-none shadow-lg hover:brightness-95 transition-all cursor-pointer rounded-3xl overflow-hidden min-h-[160px] relative group`}
                 onClick={() => setActiveStage(status)}
               >
-                <CardContent className="p-8 h-full flex flex-col justify-between text-white">
+                <CardContent className="p-5 sm:p-8 h-full flex flex-col justify-between text-white">
                   <div className="flex justify-between items-start">
-                    <span className="text-4xl font-bold opacity-90">{getStageCount(status)}</span>
-                    <StatusIcon className="w-10 h-10 opacity-80" />
+                    <span className="text-3xl sm:text-4xl font-bold opacity-90">{getStageCount(status)}</span>
+                    <StatusIcon className="w-8 h-8 sm:w-10 h-10 opacity-80" />
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold leading-tight">{config.label.split(' ')[0]}</p>
-                    <p className="text-2xl font-bold leading-tight">{config.label.split(' ').slice(1).join(' ')}</p>
+                  <div className="mt-4">
+                    <p className="text-lg sm:text-2xl font-bold leading-tight break-words">{config.label}</p>
                   </div>
 
                   {/* Subtle hover indicator */}

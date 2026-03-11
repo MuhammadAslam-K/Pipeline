@@ -5,7 +5,7 @@ export default async function Home() {
   const leads = await getLeads();
 
   return (
-    <main className="min-h-screen p-6 md:p-12 bg-gray-50 dark:bg-zinc-950 font-sans">
+    <main className="min-h-screen p-4 sm:p-6 md:p-12 bg-gray-50 dark:bg-zinc-950 font-sans">
       <div className="max-w-[1800px] mx-auto space-y-8">
         <header className="flex items-center justify-between pb-6 border-b">
           <div>
@@ -23,7 +23,7 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="bg-white dark:bg-zinc-900 p-6 min-h-[70vh]">
+        <section className="bg-white dark:bg-zinc-900 min-h-[70vh]">
           <LeadBoard initialLeads={leads} />
         </section>
       </div>
