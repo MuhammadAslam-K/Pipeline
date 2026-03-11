@@ -15,7 +15,7 @@ type LeadModalProps = {
   lead?: ILead | null;
 };
 
-const setters = ["Bashid", "Albirt", "Athira", "Farsana", "Shahna"];
+const setters = ["Bashid", "Albirt", "Aslam", "Athira", "Farsana", "Shahna"];
 
 export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
   const [loading, setLoading] = useState(false);
@@ -73,10 +73,10 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="course">Course</Label>
+            <Label htmlFor="course">Course/University</Label>
             <Input
               id="course"
-              placeholder="Web Development"
+              placeholder="Course/University"
               value={formData.course}
               onChange={(e) => setFormData({ ...formData, course: e.target.value })}
               required
