@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 const statuses = [
   "Interested",
   "Discussing in Home",
-  "Discussion Completed",
   "Will Do (Needed Time)",
   "This Month Admission",
 ];
@@ -41,8 +40,6 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
         return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
       case "Discussing in Home":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-      case "Discussion Completed":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
       case "Will Do (Needed Time)":
         return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
       case "This Month Admission":
@@ -72,7 +69,7 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
           <div className="flex flex-col text-right">
             <div className="flex items-center gap-2 justify-end">
               <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
-                 <User className="w-4 h-4 text-slate-500" />
+                <User className="w-4 h-4 text-slate-500" />
               </div>
               <span className="text-xs font-semibold text-gray-700">{lead.setter}</span>
             </div>
@@ -91,19 +88,19 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <DialogTitle className="text-xl font-bold">{lead.name}</DialogTitle>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => {
               setIsDetailOpen(false);
               onEdit(lead);
-            }} 
+            }}
             className="text-gray-500 hover:text-blue-600"
           >
             <Edit className="w-4 h-4" />
           </Button>
         </DialogHeader>
-        
+
         <div className="space-y-4 py-4">
           <Badge className={`${getStatusColor(lead.status)} border-none font-semibold shadow-sm mb-2`}>
             {lead.status}

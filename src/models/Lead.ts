@@ -20,7 +20,7 @@ const LeadSchema: Schema = new Schema({
   },
   status: {
     type: String,
-    enum: ["Interested", "Discussing in Home", "Discussion Completed", "Will Do (Needed Time)", "This Month Admission"],
+    enum: ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"],
     default: "Interested",
     required: true
   },

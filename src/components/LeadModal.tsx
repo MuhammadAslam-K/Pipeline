@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,15 +16,38 @@ type LeadModalProps = {
 };
 
 const setters = ["Bashid", "Albirt", "Aslam", "Athira", "Farsana", "Shahna"];
+const statuses = ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"];
 
 export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: lead?.name || "",
-    phone: lead?.phone?.toString() || "",
-    course: lead?.course || "",
-    setter: lead?.setter || setters[0],
+    name: "",
+    phone: "",
+    course: "",
+    setter: setters[0],
+    status: statuses[0],
   });
+
+  // Sync form data when lead changes or modal opens
+  useEffect(() => {
+    if (lead) {
+      setFormData({
+        name: lead.name || "",
+        phone: lead.phone?.toString() || "",
+        course: lead.course || "",
+        setter: lead.setter || setters[0],
+        status: lead.status || statuses[0],
+      });
+    } else {
+      setFormData({
+        name: "",
+        phone: "",
+        course: "",
+        setter: setters[0],
+        status: statuses[0],
+      });
+    }
+  }, [lead, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,6 +118,24 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
                 {setters.map((setter) => (
                   <SelectItem key={setter} value={setter}>
                     {setter}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="status">Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => value && setFormData({ ...formData, status: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status}
                   </SelectItem>
                 ))}
               </SelectContent>

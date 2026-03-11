@@ -13,7 +13,6 @@ import { Card, CardContent } from "@/components/ui/card";
 const statuses = [
   "Interested",
   "Discussing in Home",
-  "Discussion Completed",
   "Will Do (Needed Time)",
   "This Month Admission",
 ];
@@ -21,7 +20,6 @@ const statuses = [
 const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
   "Interested": { color: "bg-[#39B5A3]", icon: UserPlus, label: "Interested" },
   "Discussing in Home": { color: "bg-[#4D96F1]", icon: MessageSquare, label: "Discussing in Home" },
-  "Discussion Completed": { color: "bg-[#A37EE1]", icon: DollarSign, label: "Discussion Completed" },
   "Will Do (Needed Time)": { color: "bg-[#F8A651]", icon: Clock, label: "Will Do (Needed Time)" },
   "This Month Admission": { color: "bg-[#F16C91]", icon: Star, label: "This Month Admissions" },
 };
