@@ -75,15 +75,24 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
             </div>
           </div>
         </DialogTrigger>
-        <a
-          href={`https://wa.me/${String(lead.phone).replace(/\D/g, "")}`}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            const phone = String(lead.phone).replace(/\D/g, "");
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+              // Try to force WhatsApp Business on Android
+              window.location.href = `intent://send/${phone}#Intent;scheme=smsto;package=com.whatsapp.w4b;action=android.intent.action.SENDTO;end`;
+            } else {
+              // Standard link for iOS and Desktop
+              window.open(`https://wa.me/${phone}`, "_blank", "noreferrer");
+            }
+          }}
           className="absolute right-4 p-2 text-[#25D366] hover:bg-green-50 rounded-full transition-colors z-20 flex items-center justify-center h-10 w-10"
-          onClick={(e) => e.stopPropagation()}
         >
           <MessageCircle className="w-6 h-6 fill-current" />
-        </a>
+        </button>
       </div>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
