@@ -15,7 +15,7 @@ const LeadSchema: Schema = new Schema({
   course: { type: String, required: true },
   setter: {
     type: String,
-    enum: ["Bashid", "Albirt", "Aslam", "Athira", "Farsana", "Shahna"],
+    enum: ["Bashid", "Albirt", "Aslam", "Asla", "Athira", "Farsana", "Shahna"],
     required: true
   },
   status: {

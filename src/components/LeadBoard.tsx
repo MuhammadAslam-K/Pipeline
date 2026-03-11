@@ -24,7 +24,7 @@ const statusConfig: Record<string, { color: string; icon: any; label: string }> 
   "This Month Admission": { color: "bg-[#F16C91]", icon: Star, label: "This Month Admissions" },
 };
 
-const setters = ["All", "Bashid", "Aslam", "Albirt", "Athira", "Farsana", "Shahna"];
+const setters = ["All", "Bashid", "Aslam", "Asla", "Albirt", "Athira", "Farsana", "Shahna"];
 
 export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
   const [searchTerm, setSearchTerm] = useState("");

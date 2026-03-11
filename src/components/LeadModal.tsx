@@ -15,7 +15,7 @@ type LeadModalProps = {
   lead?: ILead | null;
 };
 
-const setters = ["Bashid", "Albirt", "Aslam", "Athira", "Farsana", "Shahna"];
+const setters = ["Bashid", "Albirt", "Aslam", "Asla", "Athira", "Farsana", "Shahna"];
 const statuses = ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"];
 
 export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
