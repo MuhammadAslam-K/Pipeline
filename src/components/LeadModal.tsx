@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { createLead, updateLead } from "@/actions/lead.actions";
 import { ILead } from "@/models/Lead";
 import { Label } from "./ui/label";
 
@@ -13,12 +12,13 @@ type LeadModalProps = {
   isOpen: boolean;
   onClose: () => void;
   lead?: ILead | null;
+  onSave: (data: Partial<ILead>) => void;
 };
 
 const setters = ["Bashid", "Albirt", "Aslam", "Asla", "Athira", "Farsana", "Shahna"];
 const statuses = ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"];
 
-export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
+export function LeadModal({ isOpen, onClose, lead, onSave }: LeadModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -51,19 +51,12 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      if (lead) {
-        await updateLead(String(lead._id), { ...formData, phone: Number(formData.phone) });
-      } else {
-        await createLead({ ...formData, phone: Number(formData.phone) });
-      }
+      onSave({ ...formData, phone: Number(formData.phone) });
       onClose();
     } catch (error) {
       console.error(error);
       alert("Failed to save lead");
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -1,12 +1,17 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ILead extends Document {
+export interface ILead {
+  _id: string;
   name: string;
   phone: number;
   course: string;
   setter: string;
   status: string;
   timestamp: Date;
+}
+
+export interface ILeadDocument extends ILead, mongoose.Document {
+  _id: any;
 }
 
 const LeadSchema: Schema = new Schema({
@@ -27,4 +32,4 @@ const LeadSchema: Schema = new Schema({
   timestamp: { type: Date, default: Date.now },
 });
 
-export const Lead = mongoose.models.Lead || mongoose.model<ILead>("Lead", LeadSchema);
+export const Lead = mongoose.models.Lead || mongoose.model<ILeadDocument>("Lead", LeadSchema);

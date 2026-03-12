@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ILead } from "@/models/Lead";
 import { LeadCard } from "./LeadCard";
 import { LeadModal } from "./LeadModal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Users, ChevronLeft, ArrowRight, UserPlus, MessageSquare, DollarSign, Clock, Star } from "lucide-react";
+import { Plus, Search, Users, ChevronLeft, ArrowRight, Upload, Download, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { syncLeads, getLeads } from "@/actions/lead.actions";
 
 const statuses = [
   "Interested",
@@ -18,27 +19,106 @@ const statuses = [
 ];
 
 const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
-  "Interested": { color: "bg-[#39B5A3]", icon: UserPlus, label: "Interested" },
-  "Discussing in Home": { color: "bg-[#4D96F1]", icon: MessageSquare, label: "Discussing in Home" },
-  "Will Do (Needed Time)": { color: "bg-[#F8A651]", icon: Clock, label: "Will Do (Needed Time)" },
-  "This Month Admission": { color: "bg-[#F16C91]", icon: Star, label: "This Month Admissions" },
+  "Interested": { color: "bg-[#39B5A3]", icon: Users, label: "Interested" }, // Fallback icon
+  "Discussing in Home": { color: "bg-[#4D96F1]", icon: Users, label: "Discussing in Home" },
+  "Will Do (Needed Time)": { color: "bg-[#F8A651]", icon: Users, label: "Will Do (Needed Time)" },
+  "This Month Admission": { color: "bg-[#F16C91]", icon: Users, label: "This Month Admissions" },
 };
+
+// Re-importing specific icons to match original
+import { UserPlus, MessageSquare, Clock, Star } from "lucide-react";
+statusConfig["Interested"].icon = UserPlus;
+statusConfig["Discussing in Home"].icon = MessageSquare;
+statusConfig["Will Do (Needed Time)"].icon = Clock;
+statusConfig["This Month Admission"].icon = Star;
 
 const setters = ["All", "Bashid", "Aslam", "Asla", "Albirt", "Athira", "Farsana", "Shahna"];
 
 export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
+  const [leads, setLeads] = useState<ILead[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSetter, setFilterSetter] = useState("All");
   const [activeStage, setActiveStage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<ILead | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // Initialize leads from localStorage or initialLeads
+  useEffect(() => {
+    const localData = localStorage.getItem("pipeline_leads");
+    if (localData) {
+      setLeads(JSON.parse(localData));
+    } else {
+      setLeads(initialLeads);
+      localStorage.setItem("pipeline_leads", JSON.stringify(initialLeads));
+    }
+  }, [initialLeads]);
+
+  // Persist to localStorage whenever leads change
+  const updateLeadsLocally = (newLeads: ILead[]) => {
+    setLeads(newLeads);
+    localStorage.setItem("pipeline_leads", JSON.stringify(newLeads));
+  };
+
+  const handleCreateOrUpdate = (leadData: Partial<ILead>) => {
+    if (editingLead) {
+      const newLeads = leads.map(l => String(l._id) === String(editingLead._id) ? { ...l, ...leadData } : l);
+      updateLeadsLocally(newLeads);
+    } else {
+      const newLead: ILead = {
+        _id: Math.random().toString(36).substr(2, 9), // Temporary ID
+        ...leadData as any,
+        timestamp: new Date(),
+      } as ILead;
+      updateLeadsLocally([newLead, ...leads]);
+    }
+  };
+
+  const handleStatusChange = (id: string, newStatus: string) => {
+    const newLeads = leads.map(l => String(l._id) === id ? { ...l, status: newStatus } : l);
+    updateLeadsLocally(newLeads);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this lead?")) {
+      const newLeads = leads.filter(l => String(l._id) !== id);
+      updateLeadsLocally(newLeads);
+    }
+  };
+
+  const handleUpload = async () => {
+    setIsSyncing(true);
+    try {
+      await syncLeads(leads);
+      alert("Data uploaded to server successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to upload data");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    setIsSyncing(true);
+    try {
+      const freshLeads = await getLeads();
+      updateLeadsLocally(freshLeads);
+      alert("Data downloaded from server successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to download data");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleEdit = (lead: ILead) => {
     setEditingLead(lead);
     setIsModalOpen(true);
   };
 
-  const filteredLeads = initialLeads.filter((lead) => {
+  const filteredLeads = leads.filter((lead) => {
     return (
       (filterSetter === "All" || lead.setter === filterSetter) &&
       (lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -72,9 +152,17 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
               {activeStage || "Pipeline Stages"}
             </h2>
           </div>
-          <Button onClick={() => setIsModalOpen(true)} size="sm" className="lg:hidden gap-1 shadow-sm">
-            <Plus className="w-4 h-4" /> Add
-          </Button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <Button onClick={handleDownload} variant="outline" size="sm" disabled={isSyncing}>
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button onClick={handleUpload} variant="outline" size="sm" disabled={isSyncing}>
+              <Upload className="w-4 h-4" />
+            </Button>
+            <Button onClick={() => setIsModalOpen(true)} size="sm" className="gap-1 shadow-sm">
+              <Plus className="w-4 h-4" /> Add
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex items-center gap-3 w-full lg:w-auto">
@@ -101,10 +189,20 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
               </SelectContent>
             </Select>
 
-            <Button onClick={() => setIsModalOpen(true)} className="hidden lg:flex gap-2 shadow-sm h-9">
-              <Plus className="w-4 h-4" />
-              Add Lead
-            </Button>
+            <div className="hidden lg:flex items-center gap-2">
+              <Button onClick={handleDownload} variant="outline" className="gap-2 h-9" disabled={isSyncing}>
+                {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                Download
+              </Button>
+              <Button onClick={handleUpload} variant="outline" className="gap-2 h-9" disabled={isSyncing}>
+                {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                Upload
+              </Button>
+              <Button onClick={() => setIsModalOpen(true)} className="gap-2 shadow-sm h-9">
+                <Plus className="w-4 h-4" />
+                Add Lead
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -129,7 +227,6 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
                     <p className="text-lg sm:text-2xl font-bold leading-tight break-words">{config.label}</p>
                   </div>
 
-                  {/* Subtle hover indicator */}
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="bg-white/20 p-2 rounded-full">
                       <ArrowRight className="w-5 h-5" />
@@ -145,7 +242,13 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
           {filteredLeads
             .filter((lead) => lead.status === activeStage)
             .map((lead) => (
-              <LeadCard key={String(lead._id)} lead={lead} onEdit={handleEdit} />
+              <LeadCard 
+                key={String(lead._id)} 
+                lead={lead} 
+                onEdit={handleEdit} 
+                onStatusChange={handleStatusChange}
+                onDelete={handleDelete}
+              />
             ))}
 
           {filteredLeads.filter((l) => l.status === activeStage).length === 0 && (
@@ -171,6 +274,7 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
           setEditingLead(null);
         }}
         lead={editingLead}
+        onSave={handleCreateOrUpdate}
       />
     </div>
   );

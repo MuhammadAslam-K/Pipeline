@@ -4,9 +4,8 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { updateLeadStatus } from "@/actions/lead.actions";
 import { ILead } from "@/models/Lead";
-import { Phone, BookOpen, User, CalendarDays, Edit } from "lucide-react";
+import { Phone, BookOpen, User, CalendarDays, Edit, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -18,20 +17,22 @@ const statuses = [
   "This Month Admission",
 ];
 
-export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) => void }) {
+export function LeadCard({ 
+  lead, 
+  onEdit, 
+  onStatusChange,
+  onDelete
+}: { 
+  lead: ILead; 
+  onEdit: (lead: ILead) => void;
+  onStatusChange: (id: string, newStatus: string) => void;
+  onDelete: (id: string) => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const handleStatusChange = async (newStatus: string) => {
-    setLoading(true);
-    try {
-      await updateLeadStatus(String(lead._id), newStatus);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update status");
-    } finally {
-      setLoading(false);
-    }
+    onStatusChange(String(lead._id), newStatus);
   };
 
   const getStatusColor = (status: string) => {
@@ -97,17 +98,30 @@ export function LeadCard({ lead, onEdit }: { lead: ILead; onEdit: (lead: ILead) 
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <DialogTitle className="text-xl font-bold">{lead.name}</DialogTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              setIsDetailOpen(false);
-              onEdit(lead);
-            }}
-            className="text-gray-500 hover:text-blue-600"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setIsDetailOpen(false);
+                onEdit(lead);
+              }}
+              className="text-gray-500 hover:text-blue-600"
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setIsDetailOpen(false);
+                onDelete(String(lead._id));
+              }}
+              className="text-gray-500 hover:text-red-600"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
