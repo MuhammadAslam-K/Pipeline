@@ -25,8 +25,8 @@ const LeadSchema: Schema = new Schema({
   },
   status: {
     type: String,
-    enum: ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"],
-    default: "Interested",
+    enum: ["Next Month", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"],
+    default: "Discussing in Home",
     required: true
   },
   timestamp: { type: Date, default: Date.now },

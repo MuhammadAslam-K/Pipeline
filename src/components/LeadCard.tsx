@@ -11,19 +11,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 
 const statuses = [
-  "Interested",
   "Discussing in Home",
   "Will Do (Needed Time)",
+  "Next Month",
   "This Month Admission",
 ];
 
-export function LeadCard({ 
-  lead, 
-  onEdit, 
+export function LeadCard({
+  lead,
+  onEdit,
   onStatusChange,
   onDelete
-}: { 
-  lead: ILead; 
+}: {
+  lead: ILead;
   onEdit: (lead: ILead) => void;
   onStatusChange: (id: string, newStatus: string) => void;
   onDelete: (id: string) => void;
@@ -37,7 +37,7 @@ export function LeadCard({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Interested":
+      case "Next Month":
         return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
       case "Discussing in Home":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";

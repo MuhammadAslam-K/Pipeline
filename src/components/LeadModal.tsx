@@ -16,7 +16,7 @@ type LeadModalProps = {
 };
 
 const setters = ["Bashid", "Albirt", "Aslam", "Asla", "Athira", "Farsana", "Shahna"];
-const statuses = ["Interested", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"];
+const statuses = ["Next Month", "Discussing in Home", "Will Do (Needed Time)", "This Month Admission"];
 
 export function LeadModal({ isOpen, onClose, lead, onSave }: LeadModalProps) {
   const [loading, setLoading] = useState(false);

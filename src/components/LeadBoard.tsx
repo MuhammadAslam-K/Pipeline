@@ -12,24 +12,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { syncLeads, getLeads } from "@/actions/lead.actions";
 
 const statuses = [
-  "Interested",
   "Discussing in Home",
   "Will Do (Needed Time)",
+  "Next Month",
   "This Month Admission",
 ];
 
 const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
-  "Interested": { color: "bg-[#39B5A3]", icon: Users, label: "Interested" }, // Fallback icon
   "Discussing in Home": { color: "bg-[#4D96F1]", icon: Users, label: "Discussing in Home" },
   "Will Do (Needed Time)": { color: "bg-[#F8A651]", icon: Users, label: "Will Do (Needed Time)" },
+  "Next Month": { color: "bg-[#39B5A3]", icon: Users, label: "Next Month" }, // Fallback icon
   "This Month Admission": { color: "bg-[#F16C91]", icon: Users, label: "This Month Admissions" },
 };
 
 // Re-importing specific icons to match original
 import { UserPlus, MessageSquare, Clock, Star } from "lucide-react";
-statusConfig["Interested"].icon = UserPlus;
 statusConfig["Discussing in Home"].icon = MessageSquare;
 statusConfig["Will Do (Needed Time)"].icon = Clock;
+statusConfig["Next Month"].icon = UserPlus;
 statusConfig["This Month Admission"].icon = Star;
 
 const setters = ["All", "Bashid", "Aslam", "Asla", "Albirt", "Athira", "Farsana", "Shahna"];
@@ -242,10 +242,10 @@ export function LeadBoard({ initialLeads }: { initialLeads: ILead[] }) {
           {filteredLeads
             .filter((lead) => lead.status === activeStage)
             .map((lead) => (
-              <LeadCard 
-                key={String(lead._id)} 
-                lead={lead} 
-                onEdit={handleEdit} 
+              <LeadCard
+                key={String(lead._id)}
+                lead={lead}
+                onEdit={handleEdit}
                 onStatusChange={handleStatusChange}
                 onDelete={handleDelete}
               />
